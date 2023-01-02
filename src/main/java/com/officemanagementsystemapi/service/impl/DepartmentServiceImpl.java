@@ -54,8 +54,15 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = departmentRepository.findFirstByName(departmentResponse.getName());
         if (Objects.nonNull(department)) throw  new ResponseStatusException(HttpStatus.NOT_FOUND, "Department already exists");
         department = departmentRepository.save(new Department(departmentResponse.getName()));
-        // set relationship
-        setRelationships(department, departmentResponse);
+
+        // set relationships
+        department.setCategoryList(categoryService.saveOrGetByNames(departmentResponse.getCategories(), department));
+        department.setPeoples(peopleRepository.findAllByIdIn(departmentResponse.getCategories()
+                .stream()
+                .flatMap(categoryResponse ->  categoryResponse.getPeopleIds().stream())
+                .collect(Collectors.toList())));
+        department.setLeaders(peopleRepository.findAllByIdIn(departmentResponse.getLeadersIds()));
+        departmentRepository.save(department);
 
         return new DepartmentResponse(department);
     }
@@ -66,9 +73,15 @@ public class DepartmentServiceImpl implements DepartmentService {
         // get department by id and edit
         Department department = departmentRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Department not found"));
         department.setName(departmentResponse.getName());
-        // set relationship
-        setRelationships(department, departmentResponse);
 
+        // set relationship
+        department.setCategoryList(categoryService.editCategories(departmentResponse.getCategories(), department));
+        department.setPeoples(peopleRepository.findAllByIdIn(departmentResponse.getCategories()
+                .stream()
+                .flatMap(categoryResponse ->  categoryResponse.getPeopleIds().stream())
+                .collect(Collectors.toList())));
+        department.setLeaders(peopleRepository.findAllByIdIn(departmentResponse.getLeadersIds()));
+        departmentRepository.save(department);
 
         return new DepartmentResponse(department);
     }
@@ -77,15 +90,5 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Transactional
     public void deleteDepartment(Integer id) {
         departmentRepository.deleteById(id);
-    }
-
-    private void setRelationships(Department department, DepartmentResponse departmentResponse) {
-        department.setCategoryList(categoryService.saveOrGetByNames(departmentResponse.getCategories(), department));
-        department.setPeoples(peopleRepository.findAllByIdIn(departmentResponse.getCategories()
-                .stream()
-                .flatMap(categoryResponse ->  categoryResponse.getPeopleIds().stream())
-                .collect(Collectors.toList())));
-        department.setLeaders(peopleRepository.findAllByIdIn(departmentResponse.getLeadersIds()));
-        departmentRepository.save(department);
     }
 }

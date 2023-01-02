@@ -36,6 +36,26 @@ public class CategoryServiceImpl implements CategoryService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Category> editCategories(Set<CategoryResponse> categoryResponseList, Department department) {
+
+        List<Category> newCategories = categoryResponseList
+                .stream()
+                .map(categoryResponse -> saveOrUpdate(categoryResponse, department))
+                .collect(Collectors.toList());
+
+        // remove old categories
+        removeOldCategories(newCategories, department);
+
+        return newCategories;
+    }
+
+    private void removeOldCategories(List<Category> newCategories, Department department) {
+        List<Category> oldCategories = categoryRepository.findAllByDepartment(department);
+        oldCategories.removeAll(newCategories);
+        categoryRepository.deleteAll(oldCategories);
+    }
+
     private Category saveOrUpdate(CategoryResponse categoryResponse, Department department) {
         Category category = categoryRepository.findFirstByName(categoryResponse.getName())
                 .orElseGet(() -> categoryRepository.save(new Category(categoryResponse.getName(), department)));
@@ -43,5 +63,6 @@ public class CategoryServiceImpl implements CategoryService {
         category.setPeopleSet(peopleRepository.findAllByIdIn(categoryResponse.getPeopleIds()));
         return categoryRepository.save(category);
     }
+
 
 }

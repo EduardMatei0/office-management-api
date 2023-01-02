@@ -11,4 +11,5 @@ import java.util.Set;
 public interface CategoryService {
 
     List<Category> saveOrGetByNames(Set<CategoryResponse> categoryResponseList, Department department);
+    List<Category> editCategories(Set<CategoryResponse> categoryResponseList, Department department);
 }
