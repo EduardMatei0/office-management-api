@@ -1,6 +1,9 @@
 package com.officemanagementsystemapi.service.impl;
 
+import com.officemanagementsystemapi.json.PeopleQuery;
 import com.officemanagementsystemapi.json.PeopleResponse;
+import com.officemanagementsystemapi.model.Category;
+import com.officemanagementsystemapi.model.Department;
 import com.officemanagementsystemapi.model.People;
 import com.officemanagementsystemapi.repository.CategoryRepository;
 import com.officemanagementsystemapi.repository.DepartmentRepository;
@@ -11,6 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.*;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,6 +29,8 @@ public class PeopleServiceImpl implements PeopleService {
     private final PeopleRepository peopleRepository;
     private final DepartmentRepository departmentRepository;
     private final CategoryRepository categoryRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public PeopleServiceImpl(PeopleRepository peopleRepository,
@@ -40,6 +50,34 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     public List<PeopleResponse> getAll() {
         return peopleRepository.findAll()
+                .stream()
+                .map(PeopleResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public List<PeopleResponse> getAllByQuery(PeopleQuery peopleQuery) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<People> criteriaQuery = criteriaBuilder.createQuery(People.class);
+        Root<People> peopleRoot = criteriaQuery.from(People.class);
+        criteriaQuery.select(peopleRoot);
+
+        List<Predicate> predicates = new ArrayList<>();
+        if (peopleQuery.getNames().size() > 0) predicates.add(peopleRoot.get("name").in(peopleQuery.getNames()));
+        if (peopleQuery.getEmails().size() > 0) predicates.add(peopleRoot.get("email").in(peopleQuery.getEmails()));
+        if (peopleQuery.getPhoneNumbers().size() > 0) predicates.add(peopleRoot.get("phoneNumber").in(peopleQuery.getPhoneNumbers()));
+        if (peopleQuery.getDepartments().size() > 0) {
+            Join<People, Department> departmentJoin = peopleRoot.join("departments");
+            predicates.add(departmentJoin.get("name").in(peopleQuery.getDepartments()));
+        }
+        if (peopleQuery.getCategories().size() > 0) {
+            Join<People, Category> categoryJoin = peopleRoot.join("categories");
+            predicates.add(categoryJoin.get("name").in(peopleQuery.getCategories()));
+        }
+        if (predicates.size() > 0) criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
+
+        return entityManager.createQuery(criteriaQuery).getResultList()
                 .stream()
                 .map(PeopleResponse::new)
                 .collect(Collectors.toList());

@@ -19,28 +19,28 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-    @GetMapping("api/department")
+    @GetMapping("api/departments")
     public ResponseEntity<List<DepartmentResponse>> getAllDepartments() {
         return new ResponseEntity<>(departmentService.getAll(), HttpStatus.OK);
     }
 
-    @GetMapping("api/department/{id}")
+    @GetMapping("api/departments/{id}")
     public ResponseEntity<DepartmentResponse> getOneDepartment(@PathVariable("id") Integer id) {
         return new ResponseEntity<>(departmentService.getOne(id), HttpStatus.OK);
     }
 
-    @PostMapping("api/department")
+    @PostMapping("api/departments")
     public ResponseEntity<DepartmentResponse> saveOneDepartment(@RequestBody DepartmentResponse departmentResponse) {
         return new ResponseEntity<>(departmentService.saveOne(departmentResponse), HttpStatus.CREATED);
     }
 
-    @PutMapping("api/department/{id}")
+    @PutMapping("api/departments/{id}")
     public ResponseEntity<DepartmentResponse> updateOneDepartment(@PathVariable("id") Integer id,
                                                                   @RequestBody DepartmentResponse departmentResponse) {
         return new ResponseEntity<>(departmentService.editOne(departmentResponse, id), HttpStatus.OK);
     }
 
-    @DeleteMapping("api/department/{id}")
+    @DeleteMapping("api/departments/{id}")
     public ResponseEntity<String> deleteOneDepartment(@PathVariable("id") Integer id) {
         departmentService.deleteDepartment(id);
         return new ResponseEntity<>("Deleted", HttpStatus.OK);
