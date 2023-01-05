@@ -1,6 +1,6 @@
 package com.officemanagementsystemapi.service.impl;
 
-import com.officemanagementsystemapi.json.DepartmentResponse;
+import com.officemanagementsystemapi.json.response.DepartmentResponse;
 import com.officemanagementsystemapi.model.Department;
 import com.officemanagementsystemapi.repository.DepartmentRepository;
 import com.officemanagementsystemapi.repository.PeopleRepository;

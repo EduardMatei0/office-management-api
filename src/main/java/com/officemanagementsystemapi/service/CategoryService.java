@@ -1,7 +1,7 @@
 package com.officemanagementsystemapi.service;
 
 
-import com.officemanagementsystemapi.json.CategoryResponse;
+import com.officemanagementsystemapi.json.response.CategoryResponse;
 import com.officemanagementsystemapi.model.Category;
 import com.officemanagementsystemapi.model.Department;
 

@@ -1,4 +1,4 @@
-package com.officemanagementsystemapi.json;
+package com.officemanagementsystemapi.json.response;
 
 import com.officemanagementsystemapi.model.Category;
 import com.officemanagementsystemapi.model.Department;

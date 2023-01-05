@@ -1,8 +1,8 @@
 package com.officemanagementsystemapi.service;
 
 
-import com.officemanagementsystemapi.json.PeopleQuery;
-import com.officemanagementsystemapi.json.PeopleResponse;
+import com.officemanagementsystemapi.json.request.PeopleQuery;
+import com.officemanagementsystemapi.json.response.PeopleResponse;
 
 import java.util.List;
 

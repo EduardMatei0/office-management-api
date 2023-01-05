@@ -1,7 +1,7 @@
 package com.officemanagementsystemapi.controller;
 
-import com.officemanagementsystemapi.json.PeopleQuery;
-import com.officemanagementsystemapi.json.PeopleResponse;
+import com.officemanagementsystemapi.json.request.PeopleQuery;
+import com.officemanagementsystemapi.json.response.PeopleResponse;
 import com.officemanagementsystemapi.service.PeopleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -24,35 +25,36 @@ public class PeopleController {
         this.peopleService = peopleService;
     }
 
-    @GetMapping("api/peoples")
-    public ResponseEntity<List<PeopleResponse>> getAllPeople() {
+    @GetMapping("peoples")
+    public ResponseEntity<List<PeopleResponse>> getAllPeople(Principal principal) {
+        logger.info("Principal is {}", principal);
         return new ResponseEntity<>(peopleService.getAll(), HttpStatus.OK);
     }
 
-    @PostMapping("api/peoples/search")
+    @PostMapping("peoples/search")
     public ResponseEntity<List<PeopleResponse>> getAllPeopleByQuery(@RequestBody PeopleQuery peopleQuery) {
         logger.info("People Query is {}", peopleQuery);
         return new ResponseEntity<>(peopleService.getAllByQuery(peopleQuery), HttpStatus.OK);
     }
 
-    @GetMapping("api/peoples/{id}")
+    @GetMapping("peoples/{id}")
     public ResponseEntity<PeopleResponse> getOnePeople(@PathVariable("id") Integer id) {
         return new ResponseEntity<>(peopleService.getOnePeople(id), HttpStatus.OK);
     }
 
-    @PostMapping("api/peoples")
+    @PostMapping("peoples")
     public ResponseEntity<PeopleResponse> saveOne(@RequestBody @Valid PeopleResponse peopleResponse) {
         return new ResponseEntity<>(peopleService.saveOne(peopleResponse), HttpStatus.CREATED);
     }
 
-    @PutMapping("api/peoples/{id}")
+    @PutMapping("peoples/{id}")
     public ResponseEntity<PeopleResponse> updateOne(
             @PathVariable("id") Integer id,
             @RequestBody @Valid PeopleResponse peopleResponse) {
         return new ResponseEntity<>(peopleService.editOne(peopleResponse, id), HttpStatus.OK);
     }
 
-    @DeleteMapping("api/peoples/{id}")
+    @DeleteMapping("peoples/{id}")
     public ResponseEntity<String> deleteOne(@PathVariable("id") Integer id) {
         peopleService.deleteOne(id);
         return new ResponseEntity<>("Deleted", HttpStatus.OK);

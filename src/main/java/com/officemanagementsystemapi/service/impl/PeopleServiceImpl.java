@@ -1,7 +1,7 @@
 package com.officemanagementsystemapi.service.impl;
 
-import com.officemanagementsystemapi.json.PeopleQuery;
-import com.officemanagementsystemapi.json.PeopleResponse;
+import com.officemanagementsystemapi.json.request.PeopleQuery;
+import com.officemanagementsystemapi.json.response.PeopleResponse;
 import com.officemanagementsystemapi.model.Category;
 import com.officemanagementsystemapi.model.Department;
 import com.officemanagementsystemapi.model.People;

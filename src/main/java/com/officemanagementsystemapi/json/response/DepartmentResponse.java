@@ -1,4 +1,4 @@
-package com.officemanagementsystemapi.json;
+package com.officemanagementsystemapi.json.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.officemanagementsystemapi.model.Department;

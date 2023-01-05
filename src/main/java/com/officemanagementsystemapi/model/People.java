@@ -1,13 +1,15 @@
 package com.officemanagementsystemapi.model;
 
-import com.officemanagementsystemapi.json.PeopleResponse;
+import com.officemanagementsystemapi.json.response.PeopleResponse;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -15,8 +17,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode(of = "email")
+@Getter
+@Setter
 public class People {
 
     @Id
@@ -47,5 +49,18 @@ public class People {
         this.name = peopleResponse.getName();
         this.email = peopleResponse.getEmail();
         this.phoneNumber = peopleResponse.getPhoneNumber();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        People people = (People) o;
+        return id != null && Objects.equals(id, people.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

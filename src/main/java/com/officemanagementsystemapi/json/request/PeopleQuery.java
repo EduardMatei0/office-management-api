@@ -1,4 +1,4 @@
-package com.officemanagementsystemapi.json;
+package com.officemanagementsystemapi.json.request;
 
 import lombok.Data;
 import lombok.ToString;

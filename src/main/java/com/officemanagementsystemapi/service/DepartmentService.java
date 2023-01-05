@@ -1,7 +1,7 @@
 package com.officemanagementsystemapi.service;
 
 
-import com.officemanagementsystemapi.json.DepartmentResponse;
+import com.officemanagementsystemapi.json.response.DepartmentResponse;
 
 import java.util.List;
 
