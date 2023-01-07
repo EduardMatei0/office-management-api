@@ -1,6 +1,7 @@
 package com.officemanagementsystemapi.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
@@ -20,6 +21,13 @@ public class GlobalException {
         this.statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
         this.generalMessage = "Something wrong with the server, please contact suppport@gmail.com";
     }
+
+    public GlobalException(BadCredentialsException exception) {
+        this.exceptionMessage = exception.getMessage();
+        this.statusCode = HttpStatus.UNAUTHORIZED.value();
+        this.generalMessage = "Invalid email or password";
+    }
+
 
     public GlobalException(MethodArgumentNotValidException e) {
         this.exceptionMessage = e.getMessage();

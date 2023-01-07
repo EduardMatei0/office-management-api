@@ -2,6 +2,8 @@ package com.officemanagementsystemapi.controller;
 
 import com.officemanagementsystemapi.json.request.LoginRequest;
 import com.officemanagementsystemapi.json.request.SignupRequest;
+import com.officemanagementsystemapi.json.response.JwtResponse;
+import com.officemanagementsystemapi.json.response.MessageResponse;
 import com.officemanagementsystemapi.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +24,12 @@ public class AuthController {
     }
 
     @PostMapping("signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authService.signIn(loginRequest));
     }
 
     @PostMapping("signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         return ResponseEntity.ok(authService.registerUser(signUpRequest));
     }
 }
