@@ -79,6 +79,7 @@ public class PeopleServiceImpl implements PeopleService {
 
         return entityManager.createQuery(criteriaQuery).getResultList()
                 .stream()
+                .distinct()
                 .map(PeopleResponse::new)
                 .collect(Collectors.toList());
     }

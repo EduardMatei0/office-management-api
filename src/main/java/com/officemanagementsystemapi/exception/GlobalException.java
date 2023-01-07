@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,26 +12,32 @@ import java.util.List;
 import java.util.Map;
 
 public class GlobalException {
-    private String exceptionMessage;
+    private String message;
     private Integer statusCode;
     private String generalMessage;
     private Map<String, List<String>> validationMessages = new HashMap<>();
 
+    public GlobalException(ResponseStatusException exception) {
+        this.message = exception.getMessage();
+        this.statusCode = exception.getRawStatusCode();
+        this.generalMessage = "Something wrong with the server, please contact suppport@gmail.com";
+    }
+
     public GlobalException(Exception exception) {
-        this.exceptionMessage = exception.getMessage();
+        this.message = exception.getMessage();
         this.statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
         this.generalMessage = "Something wrong with the server, please contact suppport@gmail.com";
     }
 
     public GlobalException(BadCredentialsException exception) {
-        this.exceptionMessage = exception.getMessage();
+        this.message = exception.getMessage();
         this.statusCode = HttpStatus.UNAUTHORIZED.value();
         this.generalMessage = "Invalid email or password";
     }
 
 
     public GlobalException(MethodArgumentNotValidException e) {
-        this.exceptionMessage = e.getMessage();
+        this.message = e.getMessage();
         this.statusCode = HttpStatus.BAD_REQUEST.value();
         this.generalMessage = "Validation failed, Please fix errors";
 
@@ -54,12 +61,12 @@ public class GlobalException {
         this.validationMessages = validationMessages;
     }
 
-    public String getExceptionMessage() {
-        return exceptionMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setExceptionMessage(String exceptionMessage) {
-        this.exceptionMessage = exceptionMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Integer getStatusCode() {

@@ -63,10 +63,13 @@ public class CustomSecurityConfig {
         http
             .authorizeRequests(configurer -> configurer
                     .expressionHandler(defaultWebSecurityExpressionHandler())
-                    .antMatchers("/**").permitAll()
+//                    .antMatchers("/**").permitAll()
 //                    .antMatchers(HttpMethod.GET, "/**").access("hasAuthority('ROLE_USER')")
+                    .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/**").hasRole("USER")
+                    .antMatchers(HttpMethod.POST, "/peoples/search").hasRole("USER")
 //                    .antMatchers(HttpMethod.PUT, "/**").access("hasAuthority('ROLE_STAFF')")
+                    .antMatchers(HttpMethod.POST, "/**").hasRole("STAFF")
                     .antMatchers(HttpMethod.PUT, "/**").hasRole("STAFF")
 //                    .antMatchers(HttpMethod.DELETE, "/**").access("hasAuthority('ROLE_ADMIN')")
                     .antMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
